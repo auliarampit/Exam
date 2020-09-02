@@ -21,6 +21,7 @@ import {Provider} from 'react-redux';
 import reduxThunk from 'redux-thunk';
 
 // library
+import {RootSiblingParent} from 'react-native-root-siblings';
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -68,12 +69,14 @@ const App = createAppContainer(switchNavigator);
 export default () => {
   return (
     <Provider store={store}>
-      <App
-        // uriPrefix={prefix}
-        ref={(navigator) => {
-          setNavigator(navigator);
-        }}
-      />
+      <RootSiblingParent>
+        <App
+          // uriPrefix={prefix}
+          ref={(navigator) => {
+            setNavigator(navigator);
+          }}
+        />
+      </RootSiblingParent>
     </Provider>
   );
 };

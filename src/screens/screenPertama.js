@@ -10,6 +10,9 @@ import colors from '../assets/resources/colors';
 import ButtonComp from '../components/ButtonComp';
 import TextInputComp from '../components/TextInputComp';
 
+//helpers
+import ActionHandler from '../helpers/ActionHandler';
+
 // redux
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
@@ -27,10 +30,11 @@ const ScreenPertama = props => {
 
     const randomCode = () => {
         props.onRandomCode(e => {
-            if (e.status === 'success') {
-                setCode(e.data.code);
+            console.log(e);
+            if (e) {
+                setCode(e.code);
             } else {
-                alert(e.response)
+                ActionHandler.errorLocal(e.response.data.message);
             }
         });
     };
@@ -48,10 +52,12 @@ const ScreenPertama = props => {
 
         props.onSubmit(data, e => {
             if (e.status === 'success') {
-                alert(e.status)
+                props.navigation.navigate('ScreenKedua');
                 setIsLoading(false);
             } else {
-                alert(e.message.code[0])
+                console.log(e.response.data.message.code[0]);
+                ActionHandler.errorLocal(e.response.data.message.code[0]);
+                randomCode();
                 setIsLoading(false);
             }
         });
@@ -127,13 +133,13 @@ const styles = StyleSheet.create({
         height: 50,
         width: 120,
         borderRadius: 13,
-        marginTop: 30,
+        marginTop: 20,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: colors.blue1,
     },
     containerInput: {
-        marginTop: 30,
+        marginTop: 20,
         fontSize: 20,
         fontFamily: fonts.headerFontBold,
     },
@@ -170,14 +176,14 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRandomCode: async callback => {
+        onRandomCode: async (callback) => {
             const result = await dispatch(getRandomCode());
-            console.log(result);
+            // console.log(result);
             callback(result);
         },
         onSubmit: async (data, callback) => {
             const result = await dispatch(SubmitCode(data, callback));
-            console.log(result);
+            // console.log(result);
             callback(result);
         },
     };
@@ -191,7 +197,7 @@ export default reduxForm({
 
         errors.code = !values.code
             ? 'Code wajib diisi'
-            : values.code.length < 4
+            : values.code.length > 4
                 ? 'Maksimal code 4 digit'
                 : undefined;
 
@@ -199,7 +205,7 @@ export default reduxForm({
     },
 })(
     connect(
-        mapDispatchToProps,
         null,
+        mapDispatchToProps,
     )(ScreenPertama)
 );

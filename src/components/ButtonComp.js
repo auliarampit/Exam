@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     containerBtn: {
         height: 50,
         borderRadius: 13,
-        marginHorizontal: 15,
+        marginHorizontal: 9,
         backgroundColor: colors.red1,
         justifyContent: 'center',
         alignItems: 'center',

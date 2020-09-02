@@ -34,7 +34,7 @@ export const getRandomCode = () => {
               }
             })
             .catch(error => {
-              console.log('ERRRR:: ', error);
+              console.log('ERRRR:: ', error.response.data);
               resolve(error);
             });
       });
@@ -69,7 +69,7 @@ export const SubmitCode = (data) => {
             }
           })
           .catch(error => {
-            console.log('ERRRR:: ', error);
+            console.log('ERRRR:: ', error.response.data);
             resolve(error);
           });
     });
