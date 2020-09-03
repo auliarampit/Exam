@@ -4,6 +4,7 @@ import * as actionTypes from './types';
 const initialState = {
     randomCode: null,
     submitCode: null,
+    submitImage: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -20,6 +21,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 submitCode: {
                     ...action.payload.submitCode,
+                },
+            };
+            case actionTypes.SUBMIT_IMAGE:
+            return {
+                ...state,
+                submitImage: {
+                    ...action.payload.submitImage,
                 },
             };
             default:

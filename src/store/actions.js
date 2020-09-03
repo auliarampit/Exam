@@ -75,3 +75,39 @@ export const SubmitCode = (data) => {
     });
   };
 };
+
+export const submit_image = submitImage => {
+  return {
+      type: types.SUBMIT_IMAGE,
+      payload: {
+          submitImage,
+      },
+  };
+};
+
+export const SubmitImage = (data) => {
+  console.log('data action', data);
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+        axios
+          .post(urlBackend + '/post-screen-2', data, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then(res => {
+            console.log(res);
+            if (res.data.error) {
+              resolve(res.data);
+            } else {
+              dispatch(submit_image(res.data));
+              resolve(res.data);
+            }
+          })
+          .catch(error => {
+            console.log('ERRRR:: ', error.response.data);
+            resolve(error);
+          });
+    });
+  };
+};

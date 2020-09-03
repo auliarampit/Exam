@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 
 // assets
 import fonts from '../assets/resources/fonts';
@@ -17,7 +17,7 @@ import ActionHandler from '../helpers/ActionHandler';
 // redux
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
-import { getRandomCode, SubmitCode } from '../store/actions';
+import { getRandomCode, SubmitCode, SubmitImage } from '../store/actions';
 
 // library
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,36 +28,38 @@ const ScreenKedua = props => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [dataImage, setDataImage] = useState(null);
-
-  let sourceImage = [];
-  if (dataImage !== null) {
-    sourceImage.push({source: dataImage.uri});
-  }
+  const [dataImageState, setDataImageState] = useState([]);
 
   const submit = async (values) => {
     setIsLoading(true);
 
-    const data = {
-      code: values.code,
+    const dataToSubmit = {
+      name: values.name,
+      images: dataImageState,
     };
 
-    props.onSubmit(data, e => {
+    props.onSubmit(dataToSubmit, e => {
       if (e.status === 'success') {
-        props.navigation.navigate('ScreenKedua');
+        console.log('e', e);
+        Alert.alert('Success', e.status);
         setIsLoading(false);
       } else {
-        console.log(e.response.data.message.code[0]);
-        ActionHandler.errorLocal(e.response.data.message.code[0]);
+        Alert.alert('Error', e.response.data.message.name[0]);
         setIsLoading(false);
       }
     });
-  };
 
+  };
 
   const takePhoto = () => {
     const options = {
       title: 'Ambil Gambar',
+      multiple: true,
+      waitAnimationEnd: false,
+      includeExif: true,
+      forceJpg: true,
+      maxFiles: 4,
+      compressImageQuality: 0.8,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -65,7 +67,7 @@ const ScreenKedua = props => {
     };
 
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
+      // console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -74,12 +76,11 @@ const ScreenKedua = props => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = { uri: response.uri };
+        const source =  {uri : response.uri};
 
-        // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        setDataImage(source)
 
+        setDataImageState(dataImageState.concat([source.uri]));
       }
     });
   };
@@ -106,13 +107,13 @@ const ScreenKedua = props => {
       </View>
 
       <View style={styles.containerBody}>
-        <View style={[styles.containerInput, { marginBottom: 0, marginTop: 20 }]}>
+        <View style={[styles.containerInput, { marginBottom: 0, marginTop: 24 }]}>
           <Text style={styles.textRandomCode}>
             Gambar
           </Text>
 
           <View>
-            <ImageComp data={sourceImage} onPress={takePhoto} />
+            <ImageComp data={dataImageState} onPress={takePhoto} />
           </View>
         </View>
       </View>
@@ -182,15 +183,17 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = state => {
+  // console.log('state', state);
+  return {
+    //
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
-    onRandomCode: async (callback) => {
-      const result = await dispatch(getRandomCode());
-      // console.log(result);
-      callback(result);
-    },
     onSubmit: async (data, callback) => {
-      const result = await dispatch(SubmitCode(data, callback));
+      const result = await dispatch(SubmitImage(data, callback));
       // console.log(result);
       callback(result);
     },
@@ -203,15 +206,26 @@ export default reduxForm({
     const errors = {};
     console.log(values);
 
-    errors.code = !values.code
+    const isName = val => {
+      if (/^[a-zA-Z\'.,\s]*$/.test(val)) {
+        return true;
+      }
+      return false;
+    };
+
+    errors.name = !values.name
       ? 'Nama wajib diisi'
+      : !isName(values.email)
+      ? 'Nama tidak valid'
+      : !values.name.length > 50
+      ? 'Maksimal 50 karakter'
       : undefined;
 
     return errors;
   },
 })(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
   )(ScreenKedua)
 );

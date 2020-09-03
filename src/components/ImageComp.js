@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import colors from '../assets/resources/colors';
 import fonts from '../assets/resources/fonts';
 
 const ImageComp = ({ data, onPress }) => {
-    console.warn('image comp', data);
+    console.log('image comp', data);
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row' }}>
@@ -15,14 +15,15 @@ const ImageComp = ({ data, onPress }) => {
                             <>
                                 {
                                     data.map((item) => {
+                                        console.log('item', item);
                                         return (
                                             <View style={styles.containerImage}>
-                                                <Text>{item.name}</Text>
+                                                <Image source={item} style={styles.container} />
                                             </View>
                                         );
                                     })
                                 }
-                                <TouchableOpacity onPress={onPress} disabled={true} style={styles.containerImage}>
+                                <TouchableOpacity onPress={onPress} disabled={true} style={[styles.containerImage, { backgroundColor: colors.red1 }]}>
                                     <Text style={styles.textAdd}>+</Text>
                                 </TouchableOpacity>
                             </>
@@ -30,20 +31,21 @@ const ImageComp = ({ data, onPress }) => {
                             <>
                                 {
                                     data.map((item) => {
+                                        console.log('item', item);
                                         return (
                                             <View style={styles.containerImage}>
-                                                <Text>{item.name}</Text>
+                                                <Image source={item} style={styles.container} />
                                             </View>
                                         );
                                     })
                                 }
-                                <TouchableOpacity onPress={onPress} style={styles.containerImage}>
+                                <TouchableOpacity onPress={onPress} style={[styles.containerImage, { backgroundColor: colors.red1 }]}>
                                     <Text style={styles.textAdd}>+</Text>
                                 </TouchableOpacity>
                             </>
                         :
                         <>
-                            <TouchableOpacity onPress={onPress} style={styles.containerImage}>
+                            <TouchableOpacity onPress={onPress} style={[styles.containerImage, { backgroundColor: colors.red1 }]}>
                                 <Text style={styles.textAdd}>+</Text>
                             </TouchableOpacity>
                         </>
@@ -68,15 +70,15 @@ const styles = StyleSheet.create({
     containerImage: {
         height: 58,
         width: 57,
-        backgroundColor: colors.red1,
         marginTop: 17,
         marginRight: 12,
         justifyContent: 'center',
         alignItems: 'center',
     },
     textAdd: {
-        fontSize: 25,
+        fontSize: 35,
         fontFamily: fonts.headerFontBold,
+        color: colors.white,
     },
 });
 
