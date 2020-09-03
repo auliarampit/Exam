@@ -28,11 +28,17 @@ const ScreenKedua = props => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [dataImage, setDataImage] = useState(null);
+  const [dataImage, setDataImage] = useState([]);
 
-  let sourceImage = [];
+  let sourceImage = dataImage;
   if (dataImage !== null) {
-    sourceImage.push({source: dataImage.uri});
+    sourceImage.push({ source: dataImage.uri });
+  }
+
+  setImage = (data) => {
+    currentValue = dataImage
+    currentValue.push(data)
+    setDataImage(currentValue)
   }
 
   const submit = async (values) => {
@@ -78,7 +84,7 @@ const ScreenKedua = props => {
 
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        setDataImage(source)
+        setImage(source)
 
       }
     });
