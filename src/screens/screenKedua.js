@@ -12,12 +12,11 @@ import TextInputComp from '../components/TextInputComp';
 import ImageComp from '../components/ImageComp';
 
 //helpers
-import ActionHandler from '../helpers/ActionHandler';
 
 // redux
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
-import { getRandomCode, SubmitCode, SubmitImage } from '../store/actions';
+import { SubmitImage } from '../store/actions';
 
 // library
 import LinearGradient from 'react-native-linear-gradient';
@@ -55,11 +54,10 @@ const ScreenKedua = props => {
     const options = {
       title: 'Ambil Gambar',
       multiple: true,
-      waitAnimationEnd: false,
-      includeExif: true,
-      forceJpg: true,
-      maxFiles: 4,
-      compressImageQuality: 0.8,
+      maxFiles: 5,
+      maxWidth: 500,
+      maxHeight: 500,
+      compressImageQuality: 0.5,
       storageOptions: {
         skipBackup: true,
         path: 'images',
@@ -67,20 +65,16 @@ const ScreenKedua = props => {
     };
 
     ImagePicker.showImagePicker(options, (response) => {
-      // console.log('Response = ', response);
-
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+
       } else {
-        const source =  {uri : response.uri};
-
+        const source = { uri: response.uri };
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-        setDataImageState(dataImageState.concat([source.uri]));
+        setDataImageState(dataImageState.concat([source]));
       }
     });
   };
@@ -207,7 +201,7 @@ export default reduxForm({
     console.log(values);
 
     const isName = val => {
-      if (/^[a-zA-Z\'.,\s]*$/.test(val)) {
+      if (/^[a-zA-Z\\'.,\s]*$/.test(val)) {
         return true;
       }
       return false;
@@ -216,10 +210,10 @@ export default reduxForm({
     errors.name = !values.name
       ? 'Nama wajib diisi'
       : !isName(values.email)
-      ? 'Nama tidak valid'
-      : !values.name.length > 50
-      ? 'Maksimal 50 karakter'
-      : undefined;
+        ? 'Nama tidak valid'
+        : !values.name.length > 50
+          ? 'Maksimal 50 karakter'
+          : undefined;
 
     return errors;
   },

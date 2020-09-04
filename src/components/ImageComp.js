@@ -18,7 +18,7 @@ const ImageComp = ({ data, onPress }) => {
                                         console.log('item', item);
                                         return (
                                             <View style={styles.containerImage}>
-                                                <Image source={item} style={styles.container} />
+                                                <Image resizeMode={"cover"} source={item} style={styles.containerFoto} />
                                             </View>
                                         );
                                     })
@@ -34,7 +34,7 @@ const ImageComp = ({ data, onPress }) => {
                                         console.log('item', item);
                                         return (
                                             <View style={styles.containerImage}>
-                                                <Image source={item} style={styles.container} />
+                                                <Image resizeMode={"cover"} source={item} style={styles.containerFoto} />
                                             </View>
                                         );
                                     })
@@ -79,6 +79,11 @@ const styles = StyleSheet.create({
         fontSize: 35,
         fontFamily: fonts.headerFontBold,
         color: colors.white,
+    },
+    containerFoto: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
     },
 });
 

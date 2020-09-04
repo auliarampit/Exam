@@ -83,6 +83,7 @@ const TextInputComp = ({
 const styles = StyleSheet.create({
   inputContainer: {
     borderWidth: 1,
+    borderColor: colors.blue1,
     borderRadius: 15,
     paddingHorizontal: 10,
     marginTop: 5,
